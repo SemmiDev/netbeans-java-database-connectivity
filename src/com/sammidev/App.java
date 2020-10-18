@@ -1,6 +1,7 @@
 package com.sammidev;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,19 +18,54 @@ import java.util.logging.Logger;
 public class App {
     
     public static void main(String[] args) throws SQLException {
-    App app = new App();
-    Connection conn =  app.createConnection();
+//    App app = new App();
+//    Connection conn =  app.createConnection();
     
 //        selectAll(conn);
 //        selectMale(conn);
 //        insert(conn);
 //        update(conn);
-        delete(conn);
+//        delete(conn);
+
+//        connectionMysql();
     }
     
     public static Scanner scanner() {
         Scanner scanner = new Scanner(System.in);
         return scanner;
+    }
+    
+    
+    public static void connectionMysql() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/golang", "root", "");
+            System.out.println("berhasil");
+            
+            Statement statement = connection.createStatement();
+            final String sql = "SELECT * FROM todo_models";
+            ResultSet result = statement.executeQuery(sql);
+            int count = 0;
+            while (result.next()) {
+                Integer id = result.getInt("id");
+                String name = result.getString("title");
+                String email = result.getString("completed");
+                Date createdAt = result.getDate("created_at");
+                Date updatedAt = result.getDate("updated_at");
+                Date deletedAt = result.getDate("deleted_at");
+                System.out.println("name     : " + name);
+                System.out.println("email    : " + email);
+                System.out.println("created  : " + createdAt);
+                System.out.println("updated  : " + updatedAt);
+                System.out.println("deleted  : " + deletedAt);
+                count++;
+            }
+            System.out.println("tersedia = " + count + " buah data");
+            
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } 
     }
     
     public static Connection createConnection() {
